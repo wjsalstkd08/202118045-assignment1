@@ -1,0 +1,294 @@
+{
+  "info": {
+    "name": "WSD-1 Item API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8080"
+    }
+  ],
+  "item": [
+    {
+      "name": "1. 2xx 성공",
+      "item": [
+        {
+          "name": "[201] POST 단건 등록",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/v3/items",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"item-1\",\n  \"price\": 30000\n}"
+            }
+          }
+        },
+        {
+          "name": "[201] POST 헤더와 함께 등록",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "X-USER-ID",
+                "value": "user1"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer test-token"
+              }
+            ],
+            "url": "{{baseUrl}}/api/v3/items/with-header",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"item-4\",\n  \"price\": 15000\n}"
+            }
+          }
+        },
+        {
+          "name": "[200] GET 전체 조회",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/v3/items"
+          }
+        },
+        {
+          "name": "[200] GET 단건 조회",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/v3/items/1"
+          }
+        },
+        {
+          "name": "[200] GET 검색",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/v3/items/search?keyword=item-1&page=0&size=10"
+          }
+        },
+        {
+          "name": "[200] PUT 수정 (보낸 필드만)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/v3/items/1",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"edited-item-1\"\n}"
+            }
+          }
+        },
+        {
+          "name": "[200] PUT 가격만 수정",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/v3/items/1/price",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"price\": 75000\n}"
+            }
+          }
+        },
+        {
+          "name": "[200] DELETE 단건 삭제",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/api/v3/items/2"
+          }
+        },
+        {
+          "name": "[200] DELETE 전체 삭제",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/api/v3/items?confirm=true"
+          }
+        }
+      ]
+    },
+    {
+      "name": "2. 4xx 클라이언트 오류",
+      "item": [
+        {
+          "name": "준비: item-1 등록 (id=3, 201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/v3/items",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"item-1\",\n  \"price\": 30000\n}"
+            }
+          }
+        },
+        {
+          "name": "[400] 입력 검증 실패",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/v3/items",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"\",\n  \"price\": -1\n}"
+            }
+          }
+        },
+        {
+          "name": "[400] 빈 수정 요청",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/v3/items/3",
+            "body": {
+              "mode": "raw",
+              "raw": "{}"
+            }
+          }
+        },
+        {
+          "name": "[400] ID 형식 오류",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/v3/items/abc"
+          }
+        },
+        {
+          "name": "[400] 페이지 크기 오류",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/v3/items/search?size=0"
+          }
+        },
+        {
+          "name": "[400] 전체 삭제 confirm 없음",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/api/v3/items"
+          }
+        },
+        {
+          "name": "[404] 없는 아이템",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/v3/items/999"
+          }
+        },
+        {
+          "name": "[404] 없는 경로",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/nothing"
+          }
+        },
+        {
+          "name": "[405] 지원하지 않는 메소드",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": "{{baseUrl}}/api/v3/items/1"
+          }
+        }
+      ]
+    },
+    {
+      "name": "3. 5xx 서버 오류",
+      "item": [
+        {
+          "name": "[500] 내부 오류 시뮬레이션",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/admin/error-test"
+          }
+        },
+        {
+          "name": "점검 모드 켜기",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/admin/maintenance",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"enabled\": true\n}"
+            }
+          }
+        },
+        {
+          "name": "[503] 점검 중 API 호출",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/v3/items"
+          }
+        },
+        {
+          "name": "점검 모드 끄기",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/admin/maintenance",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"enabled\": false\n}"
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
